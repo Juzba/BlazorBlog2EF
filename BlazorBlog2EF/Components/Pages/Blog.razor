@@ -1,0 +1,45 @@
+﻿@page "/Blog"
+
+<PageTitle>Blog</PageTitle>
+
+<h3>Blog</h3>
+<NavLink href="/editBlog">Přidat post</NavLink>
+
+@if(PostList == null)
+{
+    <p>Nic nenalezeno.</p>
+    return;
+}
+
+
+<table>
+    <thead>
+        <tr>
+            <th>Autor</th>
+            <th>Titulek</th>
+            <th>Datum</th>
+            <th>Text</th>
+            <th>Připnuto</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach(var post in PostList)
+        {
+            <tr>
+                <td>@post.Autor</td>
+                <td>@post.Title</td>
+                <td>@post.DateT</td>
+                <td>@post.Text</td>
+                <td>@post.IsOnTop</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+   private IList<PostModel>? PostList { get; set; }
+
+
+}

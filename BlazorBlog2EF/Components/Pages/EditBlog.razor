@@ -1,0 +1,48 @@
+﻿@page "/editBlog"
+@inject NavigationManager Navigation
+
+<PageTitle>EditBlog</PageTitle>
+
+<h3>EditBlog</h3>
+
+<EditForm FormName="blogForm" Model="@postModel" OnValidSubmit="@savePostAsync">
+	@* <DataAnnotationsValidator />
+	<ValidationSummary /> *@
+
+	<div class="form-floating mb-3">
+		<input @bind-value="postModel.Title" type="text" class="form-control" id="inp1" placeholder="Blíží se Jaro.">
+		<label for="inp1">Titulek</label>
+		<ValidationMessage For="@(() => postModel.Title)" />
+	</div>
+	<div class="form-floating mb-3">
+		<input @bind-value="postModel.Text" type="text" class="form-control" id="inp2" placeholder="Už se otepluje a tráva...">
+		<label for="inp2">Text</label>
+		<ValidationMessage For="@(() => postModel.Text)" />
+	</div>
+	<div class="form-check">
+		<input @bind-value="postModel.IsOnTop" class="form-check-input" type="checkbox" id="flexCheckDefault">
+		<label class="form-check-label" for="flexCheckDefault">
+			Připnuto?
+		</label>
+	</div>
+	<button type="submit" class="btn btn-outline-primary">Vytvořit příspěvek</button>
+</EditForm>
+
+
+
+@code {
+	private PostModel postModel = new();
+
+	[Inject]
+	private ApplicationDbContext _db { get; set; }
+
+	async Task savePostAsync()
+	{
+		if(postModel.Title != null)
+		{
+			await _db.PostModels.AddAsync(postModel);
+			await _db.SaveChangesAsync();
+			Navigation.NavigateTo("/Blog");
+		}
+	}
+}
