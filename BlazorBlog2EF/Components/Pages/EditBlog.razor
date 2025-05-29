@@ -1,4 +1,5 @@
 ﻿@page "/editBlog"
+@page "/editBlog/{Param}"
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject ApplicationDbContext _db;
@@ -30,17 +31,28 @@
 
 
 @code {
+	[Parameter]
+	public string? Param{ get; set; }
+
 	private PostModel PostModel = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		if(int.TryParse(Param, out int intParametr))
+		{
+			var data = await _db.PostModels.FindAsync(intParametr);
+			if (data != null) PostModel = data;
+		}
+	}
 
 
 	async Task savePostAsync()
 	{
-		if(PostModel.Title != null)
-		{
-			await _db.PostModels.AddAsync(PostModel);
-			await _db.SaveChangesAsync();
-			Navigation.NavigateTo("/Blog");
-			Console.Beep();
-		}
+
+		await _db.PostModels.AddAsync(PostModel);
+		await _db.SaveChangesAsync();
+		Navigation.NavigateTo("/Blog");
+		Console.Beep();
+		
 	}
 }
