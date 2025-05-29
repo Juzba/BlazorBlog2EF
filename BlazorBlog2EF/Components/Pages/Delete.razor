@@ -1,0 +1,87 @@
+﻿@page "/Delete/{Param}"
+@rendermode InteractiveServer
+@inject ApplicationDbContext _db
+@inject NavigationManager navigation;
+
+
+<h3>Delete</h3>
+
+
+@if (postModel is null)
+{
+    <p>Detail o postu nenalezen!</p>
+    return;
+}
+
+<table class="table table-dark">
+    <tr>
+        <td>Id: </td>
+        <td>@postModel.Id</td>
+    </tr>
+    <tr>
+        <td>Autor: </td>
+        <td>@postModel.Autor</td>
+    </tr>
+    <tr>
+        <td>Titulek</td>
+        <td>@postModel.Title</td>
+    </tr>
+    <tr>
+        <td>Datum: </td>
+        <td>@postModel.DateT</td>
+    </tr>
+    <tr>
+        <td>Příspěvek: </td>
+        <td>@postModel.Text</td>
+    </tr>
+    <tr>
+        <td>Připnuto: </td>
+        <td>@postModel.IsOnTop</td>
+    </tr>
+</table>
+
+<div>
+    <NavLink href="/Blog" class="btn btn-outline-info">Zpět na Blog</NavLink>
+    <button @onclick="DeletePost" class="btn btn-danger" >Smazat</button>
+</div>
+
+
+
+
+
+
+
+
+
+
+@code {
+    [Parameter]
+    public string? Param { get; set; }
+
+    private PostModel? postModel;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(int.TryParse(Param, out int numParametr))
+        {
+            postModel = await _db.PostModels.FindAsync(numParametr);
+        }
+    }
+
+
+
+    void DeletePost()
+    {
+        if (postModel != null)
+        {
+            _db.PostModels.Remove(postModel);
+            _db.SaveChanges();
+            Console.Beep();
+        } 
+        navigation.NavigateTo("/Blog");
+    }
+
+
+}

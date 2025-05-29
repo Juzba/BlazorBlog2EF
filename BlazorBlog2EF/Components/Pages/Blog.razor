@@ -1,4 +1,5 @@
 ﻿@page "/Blog"
+@inject ApplicationDbContext _db
 
 <PageTitle>Blog</PageTitle>
 
@@ -12,7 +13,7 @@
 }
 
 
-<table>
+<table class="table table-dark table-striped">
     <thead>
         <tr>
             <th>Autor</th>
@@ -32,6 +33,7 @@
                 <td>@post.DateT</td>
                 <td>@post.Text</td>
                 <td>@post.IsOnTop</td>
+                <td><NavLink href="@($"/Details/{post.Id}")" class="btn btn-outline-danger">Detail</NavLink></td>
             </tr>
         }
     </tbody>
@@ -39,7 +41,10 @@
 
 
 @code {
-   private IList<PostModel>? PostList { get; set; }
+    private IList<PostModel> PostList { get; set; } = default!;
 
-
+    protected override void OnInitialized()
+    {
+        PostList = _db.PostModels.ToList();
+    }
 }
