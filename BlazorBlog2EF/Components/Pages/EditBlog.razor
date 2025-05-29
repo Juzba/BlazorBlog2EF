@@ -1,5 +1,5 @@
 ﻿@page "/editBlog"
-@using System.ComponentModel.DataAnnotations
+@rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject ApplicationDbContext _db;
 
@@ -7,43 +7,40 @@
 
 <h3>EditBlog</h3>
 
-<form method="post"  @OnSubmit="savePostAsync" @formname="blogForm">
-	<AntiforgeryToken />
-	@* <DataAnnotationsValidator />
-	<ValidationSummary /> *@
+<EditForm class="w-50" Model="@PostModel" OnValidSubmit="savePostAsync">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
 
 	<div class="form-floating mb-3">
-		<InputText @bind-Value="postModel!.Title" class="form-control" id="inp1" placeholder="Blíží se Jaro."/>
+		<InputText @bind-Value="PostModel.Title" class="form-control" id="inp1" placeholder="Blíží se Jaro."/>
 		<label for="inp1">Titulek</label>
 	</div>
 	<div class="form-floating mb-3">
-		<InputText type="text" @bind-Value="postModel!.Text" class="form-control" id="inp2" placeholder="Už se otepluje a tráva..."/>
+		<InputText type="text" @bind-Value="PostModel.Text" class="form-control" id="inp2" placeholder="Už se otepluje a tráva..."/>
 		<label for="inp2">Text</label>
 	</div>
 	<div class="form-check">
-		<InputCheckbox type="checkbox" @bind-Value="postModel!.IsOnTop" class="form-check-input" id="flexCheckDefault"/>
+		<InputCheckbox type="checkbox" @bind-Value="PostModel.IsOnTop" class="form-check-input" id="flexCheckDefault"/>
 		<label class="form-check-label" for="flexCheckDefault">
 			Připnuto?
 		</label>
 	</div>
-	<button type="submit" class="btn btn-outline-primary">Vytvořit příspěvek</button>
-</form>
-
+	<input type="submit" value="Vytvořit příspěvek" class="btn btn-primary my-3">
+</EditForm>
 
 
 @code {
-	// [SupplyParameterFromForm]
-	private PostModel? postModel;
+	private PostModel PostModel = new();
 
-	protected override void OnInitialized() => postModel ??= new();
 
 	async Task savePostAsync()
 	{
-		if(postModel.Title != null)
+		if(PostModel.Title != null)
 		{
-			await _db.PostModels.AddAsync(postModel);
+			await _db.PostModels.AddAsync(PostModel);
 			await _db.SaveChangesAsync();
 			Navigation.NavigateTo("/Blog");
+			Console.Beep();
 		}
 	}
 }
