@@ -2,7 +2,9 @@
 @rendermode InteractiveServer
 @inject ApplicationDbContext _db
 @inject NavigationManager navigation;
+@using Microsoft.AspNetCore.Authorization
 
+@attribute [Authorize]
 
 <h3>Delete</h3>
 

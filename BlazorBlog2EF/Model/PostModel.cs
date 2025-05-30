@@ -1,4 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BlazorBlog2EF.Data;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorBlog2EF.Model
 {
@@ -15,6 +19,8 @@ namespace BlazorBlog2EF.Model
         [Required(ErrorMessage = "Zadej text!")]
         public string? Text { get; set; }
 
-        public bool IsOnTop { get; set;}
+        public bool IsOnTop { get; set; }
     }
+
+
 }

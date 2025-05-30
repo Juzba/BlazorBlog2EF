@@ -3,6 +3,9 @@
 @rendermode InteractiveServer
 @inject NavigationManager Navigation
 @inject ApplicationDbContext _db;
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
 
 <PageTitle>EditBlog</PageTitle>
 
@@ -26,7 +29,7 @@
 			Připnuto?
 		</label>
 	</div>
-	<input type="submit" value="Vytvořit příspěvek" class="btn btn-primary my-3">
+	<input type="submit" value="@(Param == null ? "Vytvořit příspěvek" : "Editovat Příspěvek")" class="btn btn-primary my-3">
 </EditForm>
 
 
@@ -48,11 +51,10 @@
 
 	async Task savePostAsync()
 	{
-
-		await _db.PostModels.AddAsync(PostModel);
-		await _db.SaveChangesAsync();
-		Navigation.NavigateTo("/Blog");
-		Console.Beep();
+		if(Param == null) await _db.PostModels.AddAsync(PostModel);
 		
+		await _db.SaveChangesAsync();
+		Console.Beep();
+		Navigation.NavigateTo("/Blog");
 	}
 }
